@@ -1,4 +1,4 @@
-/* author: Andrew Burks */
+
 "use strict";
 
 /* Get or create the application global variable */
