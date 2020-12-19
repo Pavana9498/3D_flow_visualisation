@@ -13,25 +13,79 @@
     <!-- JS Libraries -->
     <script   src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="lib/js/three.min.js"></script>
+    <script src="lib/js/orbitControls.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.6/d3.min.js"></script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
 
     <!-- JS Source -->
     <script src="./src/js/scene.js"></script>
     <script src="./src/js/particleSystem.js"></script>
     <script src="./src/js/main.js"></script>
 
+    <style>
+        .non_brushed {
+            fill: #404040;
+            opacity: 0.2;
+        }
+        #scatterplot{
+            float: left;
+        }
+        #table{
+            float: left;
+        }
+        #scene{
+            float:left;
+        }
+
+    </style>
 </head>
 
 <body onload="App.start();">
+        <h2 align='center'>Flow Visualization with Three.js</h2>
+        <h3>Using Flow Visualization</h3>
+        <ul>
+            <li>Move the cylinder using 'up' and 'down' arrows</li>
+            <li>Rotate & Zoom the point cloud cylinder using mouse</li>
+            <li>Move the plane using <b>'a'(right) and 'd'(left) keys</b> to see intersecting points with point cloud on a scatter plot</li>
+            <li>Brushing and linking on scatter plot will be visible by selecting the points. 
+                You can see the concentration of the corresponding points.</li>
+            <li>The rest of the points other than the intersection points are greyed out.</li> 
+        </ul>
 
     <div class="container-fluid">
         <div class="row">
-            <div class="particleDiv col-md-6">
-                <div id="scene"></div>
+            <div class="particleDiv" style="width: 700px;">
+                <div id="scene" style="height: 600px;"></div>
+                <div id="scatterplot"></div>
+                <div id="table">
+                    <table>
+                        <tr>
+                            <th>Concentration</th> 
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-
+    <div id="credits">
+            <h2>Resources</h2>
+            <ul>
+                <li>This project was built using several Open Source components. The source code of these open source components
+                    along with license information can be found below. We acknowledge and are grateful to these developers for
+                    their contributions to the open source community.
+                    <br><b>Project:</b> <a href="https://jquery.com/">jQuery</a>
+                    <br><b>License:</b> <a href="https://tldrlegal.com/license/mit-license">MIT</a> and <a
+                        href="https://jquery.org/license/">jQuery License</a></li>
+                <li><a href="https://aerotwist.com/tutorials/creating-particles-with-three-js/">Point Cloud</a></li>
+                <li><a href="https://threejs.org/docs/#api/en/geometries/PlaneGeometry">threejs docs</a></li>
+                <li><a href="https://github.com/d3/d3-interpolate">d3 Interpolate</a></li>
+                <li><a href="https://threejs.org/docs/#manual/en/introduction/How-to-update-things">Colors update</a></li>
+                <li><a href="https://www.linkedin.com/learning/learning-3d-graphics-on-the-web-with-three-js/welcome?u=43607124">Three js Lynda</a></li>
+                <li><a href="https://www.d3-graph-gallery.com/graph/interactivity_zoom.html#brushingforzoom">Brushing</a></li>
+            </ul>
+        </div>
 </body>
 </html>

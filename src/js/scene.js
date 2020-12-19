@@ -17,6 +17,7 @@ const Scene = function(options) {
 
     // create the scene
     self.scene = new THREE.Scene();
+    // self.scene.background = new THREE.Color( 0xff0000 );
 
     // setup the camera
     self.camera = new THREE.PerspectiveCamera( 75, width / height, 0.1, 1000 );
@@ -39,6 +40,8 @@ const Scene = function(options) {
     // set the size and append it to the document
     self.renderer.setSize( width, height );
     document.getElementById(options.container).appendChild( self.renderer.domElement );
+    var controls = new THREE.OrbitControls( self.camera, self.renderer.domElement );
+    controls.update();
 
 
     // expose the public functions
@@ -58,6 +61,7 @@ const Scene = function(options) {
 
         render: function() {
             requestAnimationFrame( self.public.render );
+            controls.update();
             self.renderer.render( self.scene, self.camera );
         }
 

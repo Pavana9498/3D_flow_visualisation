@@ -38,63 +38,38 @@ const ParticleSystem = function () {
         // add the containment to the scene
         sceneObject.add(cylinder);
     };
-    var colors = d3.scaleSequential().domain([0, 360])
-        .interpolator(d3.interpolatePlasma);
+    var colors = d3.scaleSequential().domain([1,20])
+                .interpolator(d3.interpolatePuRd)
 
+    // var Colors = {
+    //     Indigo:0x4B0082,
+    //     Violet:0x9400D3,
+    //     Blue:0x0000FF,
+    //     Green:0x00FF00,
+    //     Yellow:0xFFFF00,
+    //     Orange:0xFF7F00,
+    //     Red:0xFF0000,
+    // };
+    // creates the particle system
     self.createParticleSystem = function () {
 
-        // use self.data to create the particle system
-        // draw your particle system here!
-
-        var ledgerSvg = d3.select("#scene").append("svg")
-            .attr('width', 50)
-            .attr('height', 350)
-            .attr('transform', 'translate(' + 800 + ',' +
-                -400 + ')');
-
-        var defs = ledgerSvg.append("defs");
-
-        var linearGradient = defs.append("linearGradient")
-            .attr("id", "linear-gradient")
-            .attr("gradientTransform", "rotate(90)");
-
-        linearGradient.selectAll("stop")
-            .data(colors.ticks().map((t, i, n) => ({ offset: `${100 * i / n.length}%`, color: colors(t) })))
-            .enter().append("stop")
-            .attr("offset", d => d.offset)
-            .attr("stop-color", d => d.color);
-
-        ledgerSvg.append('g')
-            .attr("transform", `translate(0,5)`)
-            .append("rect")
-            .attr('transform', `translate(0,5)`)
-            .attr("width", 20)
-            .attr("height", 300)
-            .style("fill", "url(#linear-gradient)");
-
-        var ledgerscale = d3.scaleLinear()
-            .range([5, 305])
-            .domain(colors.domain());
-
-        var ledgeraxis = d3.axisRight()
-            .scale(ledgerscale)
-            .tickSize(8)
-            .ticks(10);
-
-        ledgerSvg
-            .append("g")
-            .attr("class", "axis")
-            .attr("transform", "translate(" + (21) + "," + (5) + ")")
-            .call(ledgeraxis);
-
+        //     // use self.data to create the particle system
+        //     // draw your particle system here!
         var particleCount = 1800,
             particles = new THREE.Geometry(),
             pMaterial = new THREE.PointsMaterial({
                 size: 1,
                 sizeAttenuation: false,
                 vertexColors: THREE.VertexColors,
+
+                // map: THREE.ImageUtils.loadTexture(
+                //     "images/particle.png"
+                // ),
+                // blending: THREE.AdditiveBlending,
+                // transparent: true
             });
-        
+        console.log(bounds.minC);
+        console.log(bounds.maxC);
         var planeWidth = (bounds.maxX - bounds.minX) + 1;
         var planeHeight = (bounds.maxY - bounds.minY) + 1;
         var geometry = new THREE.PlaneGeometry(planeWidth, planeHeight);
@@ -134,11 +109,19 @@ const ParticleSystem = function () {
 
             var colour = new THREE.Color(colors(data[p].concentration));
 
+            // create a velocity vector
+            // particle.velocity = new THREE.Vector3(
+            //     0,				// x
+            //     -Math.random(),	// y
+            //     0);				// z
+
+            // add it to the geometry
             particles.vertices.push(particle);
 
             particles.colors.push(colour);
-        }
 
+        }
+        console.log(data.length)
         // create the particle system
         particleSystem = new THREE.Points(
             particles,
@@ -221,13 +204,17 @@ const ParticleSystem = function () {
                     .attr("class", "brushed");
             }
         }
-        self.grays = function (zCoordinates) {
-            for (var p = 0; p < particleSystem.geometry.vertices.length; p++) {
-                if (data[p].Z >= (zCoordinates - 0.05) && data[p].Z <= (zCoordinates + 0.05)) {
+        self.grays = function(zCoordinates){
+            console.log('grayscale');
+            console.log(zCoordinates);
+            for (var p = 0; p < particleSystem.geometry.vertices.length; p++){
+                // console.log(data.length);
+                if(data[p].Z>= (zCoordinates - 0.05) && data[p].Z<= (zCoordinates + 0.05))
+                {
                     particleSystem.geometry.colors[p].set(colors(data[p].concentration));
-
+                    
                 }
-                else {
+                else{
                     particleSystem.geometry.colors[p].set("#DCDCDC");
                 }
             }
@@ -237,9 +224,11 @@ const ParticleSystem = function () {
         function displayTable() {
 
             // disregard brushes w/o selections  
+            // ref: http://bl.ocks.org/mbostock/6232537
             if (!d3.event.selection) return;
 
             // programmed clearing of brush after mouse-up
+            // ref: https://github.com/d3/d3-brush/issues/10
             d3.select(this).call(brush.move, null);
 
             var d_brushed = d3.selectAll(".brushed").data();
@@ -290,7 +279,7 @@ const ParticleSystem = function () {
         showTableColNames();
 
         var d_row_filter = [
-            d_row.concentration];
+        d_row.concentration];
 
         d3.select("table")
             .append("tr")
